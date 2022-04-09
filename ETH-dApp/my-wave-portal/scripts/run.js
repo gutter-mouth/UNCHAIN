@@ -26,6 +26,10 @@ const main = async () => {
     waveTxn = await waveContract.connect(randomPerson).wave("Another message");
     await waveTxn.wait();
 
+    waveTxn = await waveContract.connect(randomPerson).wave("Another message");
+    await waveTxn.wait();
+
+
     ContractBalance = await hre.ethers.provider.getBalance(
         waveContract.address
     );
