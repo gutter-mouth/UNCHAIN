@@ -12,9 +12,13 @@ contract MyEpicNFT is ERC721URIStorage {
 
     string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
 
+    uint256 maxId =99;
+
     string[] firstWords = ["BTC", "ETH", "USDT"];
     string[] secondWords = ["BNB", "USDC", "XRP"];
     string[] thirdWords = ["SOL", "ADA", "LUNA"];
+
+    event NewEpicNFTMinted(address sender, uint256 tokenId);
 
 
     constructor() ERC721 ("SqureNFT", "SQUARE") {
@@ -49,11 +53,9 @@ contract MyEpicNFT is ERC721URIStorage {
         return thirdWords[rand];
     }
 
-    
-    
     function makeAnEpicNFT() public {
         uint256 newItemId = _tokenIds.current();
-
+        require(newItemId <= maxId, "Over maxId");
         string memory first = pickRandomFirstWord(newItemId);
         string memory second = pickRandomSecondWord(newItemId);
         string memory third = pickRandomThirdWord(newItemId);
@@ -87,5 +89,14 @@ contract MyEpicNFT is ERC721URIStorage {
         _setTokenURI(newItemId, finalTokenUri);
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
         _tokenIds.increment();
+        emit NewEpicNFTMinted(msg.sender, newItemId);
+    }
+
+    function getCounter() public view returns (uint256) {
+        uint256 cnt = _tokenIds.current();
+        return cnt;
+    }
+    function getMaxId() public view returns (uint256) {
+        return maxId;
     }
 }
